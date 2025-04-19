@@ -25,6 +25,11 @@ public class CompraRepository implements PurchaseRepository {
     }
 
     @Override
+    public Optional<Purchase> getPurchase(int purchaseId) {
+        return compraCrudRepository.findById(purchaseId).map(compra -> mapper.toPurchase(compra));
+    }
+
+    @Override
     public Optional<List<Purchase>> getByClient(String clientId) {
         return compraCrudRepository.findByIdCliente(clientId)
                 .map(compras -> mapper.toPurchases(compras));
@@ -35,5 +40,10 @@ public class CompraRepository implements PurchaseRepository {
         Compra compra = mapper.toCompra(purchase);
         compra.getProductos().forEach(producto -> producto.setCompra(compra));
         return mapper.toPurchase(compraCrudRepository.save(compra));
+    }
+
+    @Override
+    public void delete(int purchaseId) {
+        compraCrudRepository.deleteById(purchaseId);
     }
 }
